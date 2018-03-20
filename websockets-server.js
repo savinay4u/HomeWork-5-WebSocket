@@ -20,7 +20,7 @@ ws.on('connection', function(socket) {
       ws.clients.forEach(function(clientSocket) {
         clientSocket.send(changeMessage);
       });
-      if (messages[0].indexOf('Topic') == -1) {
+      if (messages[0].indexOf('Topic') >= 0) {
 
         messages.unshift('*** Topic is' + topicName);
       } else {
