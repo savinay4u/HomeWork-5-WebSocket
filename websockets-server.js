@@ -13,9 +13,25 @@ ws.on('connection', function(socket) {
   });
   socket.on('message', function(data) {
     console.log('message received: ' + data);
-    messages.push(data);
-    ws.clients.forEach(function(clientSocket) {
-      clientSocket.send(data);
-    });
+    var mysavedString = data.split(' ');
+    if (mysavedString[0] == '/topic') {
+      var topicName = data.substr(data.indexOf(' ') + 1);
+      var changeMessage = '*** Topic has changed to ' + topicName;
+      ws.clients.forEach(function(clientSocket) {
+        clientSocket.send(changeMessage);
+      });
+      if (messages[0].indexOf('Topic') == -1) {
+
+        messages.unshift('*** Topic is' + topicName);
+      } else {
+        messages.shift();
+        messages.unshift('*** Topic is' + topicName);
+      }
+    } else {
+      messages.push(data);
+      ws.clients.forEach(function(clientSocket) {
+        clientSocket.send(data);
+      });
+    }
   });
 });
